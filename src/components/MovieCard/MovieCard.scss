@@ -1,0 +1,134 @@
+.card {
+  max-width: 700px;
+  min-width: 420px;
+  width: 47.5%;
+  height: 281px;
+  overflow: hidden;
+  box-sizing: border-box;
+  filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
+  &__info {
+    margin-bottom: 10px;
+  }
+  &__image {
+    position: relative;
+    margin-right: 20px;
+    width: 183px;
+    height: 281px;
+    flex-shrink: 0;
+    img {
+      width: 183px;
+      height: 281px;
+    }
+  }
+  &__all {
+    width: 100%;
+  }
+  &__text {
+    margin-right: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+  }
+  @media all and (max-width: 500px) {
+    width: 100%;
+    min-width: 320px;
+    height: 245px;
+    &__image {
+      margin-right: 5px;
+      width: 60px;
+      height: 91px;
+      position: absolute;
+      padding: 5px 0 0 5px;
+      img {
+        width: 60px;
+        height: 91px;
+        position: absolute;
+      }
+    }
+    &__info {
+      margin: 0 0 10px 71px;
+      height: 86px;
+    }
+    &__text {
+      margin-left: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+    }
+  }
+  @media all and (max-width: 994px) {
+    width: 100%;
+  }
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  &__rate {
+    border-radius: 50% 50%;
+    border: 2px solid yellow;
+    min-width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    text-align: center;
+  }
+  &__rate span {
+    display: inline-block;
+    padding: 3px 0 0 1px;
+    font-size: 12px;
+  }
+  &__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  &__tags {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+}
+.ant-card-body {
+  padding: 0 !important;
+  display: flex;
+}
+.ant-rate {
+  position: absolute;
+  top: 234px;
+  font-size: 17px;
+
+  @media all and (max-width: 500px) {
+    position: absolute;
+    top: 200px;
+    right: 10px;
+  }
+}
+
+h5 {
+  font-size: 20px;
+  color: black;
+  margin: 0;
+  padding-top: 5px;
+}
+p {
+  margin: 0;
+  padding-bottom: 5px;
+}
+
+.spin {
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  @media all and (max-width: 500px) {
+    top: 35%;
+    left: 35%;
+  }
+}
