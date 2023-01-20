@@ -89,11 +89,14 @@ export default class MovieList extends Component {
     }
   };
   componentDidMount() {
-    this.api.getRatedMovies().then((data) => {
-      this.setState(() => {
-        return { moviesRateData: data.results, pageRateAll: data.total_pages, pageRate: data.page };
-      });
-    });
+    this.api
+      .getRatedMovies()
+      .then((data) => {
+        this.setState(() => {
+          return { moviesRateData: data.results, pageRateAll: data.total_pages, pageRate: data.page };
+        });
+      })
+      .catch(this.onError);
   }
 
   componentDidUpdate(prevProps, prevState) {

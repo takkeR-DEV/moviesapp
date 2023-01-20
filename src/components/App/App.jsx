@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Alert } from 'antd';
 
 import Header from '../Header/Header';
 import Search from '../Search/Search';
@@ -15,14 +16,23 @@ export default class App extends Component {
     active: 'search',
     searchQuery: '',
     genres: [],
+    error: false,
   };
 
   async componentDidMount() {
-    await this.api.getSession();
-    const data = await this.api.getGenres();
-    this.setState({ genres: data.genres });
+    try {
+      await this.api.getSession();
+      const data = await this.api.getGenres();
+      this.setState({ genres: data.genres });
+    } catch (error) {
+      this.setState({ error: true });
+    }
   }
   async componentDidUpdate() {}
+
+  componentDidCatch() {
+    this.setState({ error: true });
+  }
 
   setActive = (e) => {
     this.setState(() => {
@@ -35,14 +45,19 @@ export default class App extends Component {
   };
 
   render() {
-    const { active, searchQuery, genres } = this.state;
+    const { active, searchQuery, genres, error } = this.state;
+
     return (
       <main className="wrapper">
-        <GenresProvider value={genres}>
-          <Header setActive={this.setActive} active={active} />
-          {active === 'search' ? <Search search={this.search} /> : null}
-          <MovieList searchQuery={searchQuery} active={active} />
-        </GenresProvider>
+        {!error ? (
+          <GenresProvider value={genres}>
+            <Header setActive={this.setActive} active={active} />
+            {active === 'search' ? <Search search={this.search} /> : null}
+            <MovieList searchQuery={searchQuery} active={active} />
+          </GenresProvider>
+        ) : (
+          <Alert type="error" message="Connection refused,please use VPN" showIcon="true" className="errorvpn" />
+        )}
       </main>
     );
   }

@@ -95,6 +95,9 @@ export default class Movies {
         localStorage.removeItem('guest_session_id');
         await this.getSession();
       }
+      if (!data.ok) {
+        throw new Error(`${data.status}`);
+      }
       return data.json();
     } catch (error) {
       return error;
@@ -110,6 +113,7 @@ export default class Movies {
   }
   async getRatedMovies() {
     this.sessionId = localStorage.getItem('guest_session_id');
+    if (!this.sessionId) await this.getSession();
     const path = `/guest_session/${this.sessionId}/rated/movies`;
     const data = await this.getResourceRatedMovies(path);
     const newData = await this.#changeImageLinkInObject(data);
