@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Tag, Rate, Spin } from 'antd';
+import { Card, Tag, Rate, Spin, Alert } from 'antd';
 import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 
@@ -34,20 +34,25 @@ export default class MovieCard extends Component {
   state = {
     img: null,
     stars: 0,
+    error: false,
   };
 
   setRate = async (value) => {
     const { id, getRateFilms } = this.props;
     await this.api.postMoviesRate(value, id);
     setTimeout(async () => {
-      await getRateFilms();
+      try {
+        await getRateFilms();
+      } catch (err) {
+        this.setState({ error: true });
+      }
     }, 1000);
     this.setState({ stars: value });
   };
 
   render() {
     const { title, logo, overview, voteAverage, date, genre, starsRate } = this.props;
-    const { stars, img } = this.state;
+    const { stars, img, error } = this.state;
     let color = voteAverage > 7 ? '#66E900' : voteAverage >= 5 ? '#E9D100' : voteAverage >= 3 ? '#E97E00' : '#E90000';
     if (!this.state.img) {
       let image = new Image();
@@ -61,32 +66,38 @@ export default class MovieCard extends Component {
       <GenresConsumer>
         {(genres) => {
           return (
-            <Card className="card">
-              <div className="card__image">{imageLoader}</div>
-              <div className="card__all">
-                <div className="card__info">
-                  <div className="header">
-                    <div className="header__title">
-                      <h5>{title}</h5>
+            <>
+              {!error ? (
+                <Card className="card">
+                  <div className="card__image">{imageLoader}</div>
+                  <div className="card__all">
+                    <div className="card__info">
+                      <div className="header">
+                        <div className="header__title">
+                          <h5>{title}</h5>
+                        </div>
+                        <div className="header__rate" style={{ border: `2px solid ${color}` }}>
+                          <span>{voteAverage.toFixed(1)}</span>
+                        </div>
+                      </div>
+                      <p>{date ? format(new Date(date), 'MMMM d, yyyy') : 'none'}</p>
+                      <div className="header__tags">
+                        {genre.map((el) => {
+                          const textGenre = genres.find((gen) => {
+                            if (gen.id === el) return gen.name;
+                          });
+                          return <Tag key={el}>{textGenre.name}</Tag>;
+                        })}
+                      </div>
                     </div>
-                    <div className="header__rate" style={{ border: `2px solid ${color}` }}>
-                      <span>{voteAverage.toFixed(1)}</span>
-                    </div>
+                    <p className="card__text">{overview}</p>
+                    <Rate count={10} value={starsRate || stars} allowHalf={true} onChange={this.setRate} />
                   </div>
-                  <p>{date ? format(new Date(date), 'MMMM d, yyyy') : 'none'}</p>
-                  <div className="header__tags">
-                    {genre.map((el) => {
-                      const textGenre = genres.find((gen) => {
-                        if (gen.id === el) return gen.name;
-                      });
-                      return <Tag key={el}>{textGenre.name}</Tag>;
-                    })}
-                  </div>
-                </div>
-                <p className="card__text">{overview}</p>
-                <Rate count={10} value={starsRate || stars} allowHalf={true} onChange={this.setRate} />
-              </div>
-            </Card>
+                </Card>
+              ) : (
+                <Alert type="error" message="Connection refused" showIcon="true" />
+              )}
+            </>
           );
         }}
       </GenresConsumer>

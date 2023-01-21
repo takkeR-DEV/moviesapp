@@ -44,6 +44,7 @@ export default class MovieList extends Component {
 
   onError = () => {
     this.setState({
+      moviesRateData: [],
       error: true,
       loading: false,
     });
@@ -61,8 +62,8 @@ export default class MovieList extends Component {
       this.setState(
         {
           page: 1,
-          loading: true,
           error: false,
+          loading: true,
           result: false,
           query: searchQuery,
           moviesData: [],
@@ -106,21 +107,29 @@ export default class MovieList extends Component {
       this.searchdeb(searchQuery);
     }
     const { moviesRateData } = this.state;
-    if (moviesRateData.length !== prevState.moviesRateData.length) {
-      this.setState({ rateLoad: true });
-      this.api.getRatedMovies().then((data) => {
-        this.setState(() => {
-          return { moviesRateData: data.results, rateLoad: false };
-        });
-      });
+    if (moviesRateData !== undefined && prevState.moviesRateData !== undefined) {
+      if (moviesRateData.length !== prevState.moviesRateData.length) {
+        this.setState({ rateLoad: true });
+        this.api
+          .getRatedMovies()
+          .then((data) => {
+            this.setState(() => {
+              return { moviesRateData: data.results, rateLoad: false };
+            });
+          })
+          .catch(this.onError);
+      }
     }
   }
   getRateFilms = () => {
-    this.api.getRatedMovies().then((data) => {
-      this.setState(() => {
-        return { moviesRateData: data.results };
-      });
-    });
+    this.api
+      .getRatedMovies()
+      .then((data) => {
+        this.setState(() => {
+          return { moviesRateData: data.results };
+        });
+      })
+      .catch(this.onError);
   };
   onChangePagination = (page) => {
     this.setState(
