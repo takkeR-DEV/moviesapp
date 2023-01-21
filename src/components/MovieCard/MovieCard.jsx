@@ -38,7 +38,9 @@ export default class MovieCard extends Component {
   };
 
   setRate = async (value) => {
-    const { id, getRateFilms } = this.props;
+    const { id, getRateFilms, rateLoad } = this.props;
+    this.setState({ stars: value });
+    rateLoad();
     await this.api.postMoviesRate(value, id);
     setTimeout(async () => {
       try {
@@ -47,7 +49,6 @@ export default class MovieCard extends Component {
         this.setState({ error: true });
       }
     }, 1000);
-    this.setState({ stars: value });
   };
 
   render() {

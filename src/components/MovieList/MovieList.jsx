@@ -131,6 +131,10 @@ export default class MovieList extends Component {
       })
       .catch(this.onError);
   };
+
+  reteLoad = () => {
+    this.setState({ rateLoad: true });
+  };
   onChangePagination = (page) => {
     this.setState(
       {
@@ -221,6 +225,7 @@ export default class MovieList extends Component {
                   genre={data.genre_ids}
                   starsRate={data.rating || newRate}
                   getRateFilms={this.getRateFilms}
+                  rateLoad={this.reteLoad}
                 />
               );
             })
