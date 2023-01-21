@@ -25,7 +25,7 @@ export default class App extends Component {
       const data = await this.api.getGenres();
       this.setState({ genres: data.genres });
     } catch (error) {
-      this.setState({ error: true });
+      return error;
     }
   }
   async componentDidUpdate() {}
