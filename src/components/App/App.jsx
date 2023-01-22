@@ -28,7 +28,6 @@ export default class App extends Component {
       return error;
     }
   }
-  async componentDidUpdate() {}
 
   componentDidCatch() {
     this.setState({ error: true });
