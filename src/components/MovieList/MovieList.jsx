@@ -56,6 +56,7 @@ export default class MovieList extends Component {
       this.setState({
         moviesData: [],
         query: '',
+        page: 1,
       });
     }
     if (searchQuery) {
@@ -75,7 +76,7 @@ export default class MovieList extends Component {
               this.setState(() => {
                 const newData = [...el.results];
                 let res = null;
-                newData.length === 0 ? (res = true) : (res = false);
+                res = newData.length === 0 ? true : false;
                 return {
                   moviesData: newData,
                   pageNumber: el.total_pages,
@@ -102,7 +103,7 @@ export default class MovieList extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { searchQuery } = this.props;
-    const { query } = this.state;
+    const { query, pageRate } = this.state;
     if (searchQuery != query) {
       this.searchdeb(searchQuery);
     }
@@ -111,7 +112,7 @@ export default class MovieList extends Component {
       if (moviesRateData.length !== prevState.moviesRateData.length) {
         this.setState({ rateLoad: true });
         this.api
-          .getRatedMovies()
+          .getRatedMovies(pageRate)
           .then((data) => {
             this.setState(() => {
               return { moviesRateData: data.results, rateLoad: false };
@@ -121,12 +122,12 @@ export default class MovieList extends Component {
       }
     }
   }
-  getRateFilms = () => {
+  getRateFilms = (page = 1) => {
     this.api
-      .getRatedMovies()
+      .getRatedMovies(page)
       .then((data) => {
         this.setState(() => {
-          return { moviesRateData: data.results };
+          return { moviesRateData: data.results, pageRateAll: data.total_pages, pageRate: data.page };
         });
       })
       .catch(this.onError);
@@ -135,7 +136,9 @@ export default class MovieList extends Component {
   reteLoad = () => {
     this.setState({ rateLoad: true });
   };
-  onChangePagination = (page) => {
+  //Пагинация
+
+  changePaginationSearch = (page) => {
     this.setState(
       {
         page: page,
@@ -156,7 +159,7 @@ export default class MovieList extends Component {
                   this.setState(() => {
                     const newData = [...el.results];
                     let res = null;
-                    newData.length === 0 ? (res = true) : (res = false);
+                    res = newData.length === 0 ? true : false;
                     return {
                       moviesData: newData,
                       pageNumber: el.total_pages,
@@ -173,24 +176,49 @@ export default class MovieList extends Component {
     );
   };
 
+  onChangePagination = (page) => {
+    const { active } = this.props;
+    if (active === 'search') this.changePaginationSearch(page);
+    if (active === 'rated') {
+      console.log('rated');
+      this.getRateFilms(page);
+    }
+  };
+
   render() {
     const { active } = this.props;
-    const { moviesData, moviesRateData, loading, error, rateLoad, result, page, pageNumber } = this.state;
+    const { moviesData, moviesRateData, loading, error, rateLoad, result, page, pageNumber, pageRate, pageRateAll } =
+      this.state;
     let dataFilms = active === 'search' ? moviesData : moviesRateData;
-
     let load = loading ? <Spin className="movielist__spin" size="large" /> : null;
     let loadRate = rateLoad ? <Spin className="movielist__spin" size="large" /> : null;
-    let pagination =
-      !!moviesData.length && !loading && !error && active === 'search' ? (
-        <Pagination
-          className="pagination"
-          current={page}
-          total={pageNumber}
-          defaultPageSize={1}
-          showSizeChanger={false}
-          onChange={this.onChangePagination}
-        />
-      ) : null;
+    let pagination;
+
+    if (!!moviesData.length && !loading && !error) {
+      if (active === 'search') {
+        pagination = (
+          <Pagination
+            className="pagination"
+            current={page}
+            total={pageNumber}
+            defaultPageSize={1}
+            showSizeChanger={false}
+            onChange={this.onChangePagination}
+          />
+        );
+      } else if (active === 'rated') {
+        pagination = (
+          <Pagination
+            className="pagination"
+            current={pageRate}
+            total={pageRateAll}
+            defaultPageSize={1}
+            showSizeChanger={false}
+            onChange={this.onChangePagination}
+          />
+        );
+      }
+    }
     let resultMessage = result ? (
       <Alert
         type="error"

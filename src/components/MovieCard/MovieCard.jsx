@@ -54,7 +54,16 @@ export default class MovieCard extends Component {
   render() {
     const { title, logo, overview, voteAverage, date, genre, starsRate } = this.props;
     const { stars, img, error } = this.state;
-    let color = voteAverage > 7 ? '#66E900' : voteAverage >= 5 ? '#E9D100' : voteAverage >= 3 ? '#E97E00' : '#E90000';
+    let color;
+    if (voteAverage > 7) {
+      color = '#66E900';
+    } else if (voteAverage >= 5) {
+      color = '#E9D100';
+    } else if (voteAverage >= 3) {
+      color = '#E97E00';
+    } else {
+      color = '#66E900';
+    }
     if (!this.state.img) {
       let image = new Image();
       image.src = logo;

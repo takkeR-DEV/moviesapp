@@ -103,19 +103,19 @@ export default class Movies {
       return error;
     }
   }
-  async getResourceRatedMovies(path) {
+  async getResourceRatedMovies(path, page = 1) {
     try {
-      const data = await fetch(`${this._apiBase}${path}?api_key=${this.apiKey}`);
+      const data = await fetch(`${this._apiBase}${path}?api_key=${this.apiKey}&page=${page}`);
       return data.json();
     } catch (error) {
       return error;
     }
   }
-  async getRatedMovies() {
+  async getRatedMovies(page = 1) {
     this.sessionId = localStorage.getItem('guest_session_id');
     if (!this.sessionId) await this.getSession();
     const path = `/guest_session/${this.sessionId}/rated/movies`;
-    const data = await this.getResourceRatedMovies(path);
+    const data = await this.getResourceRatedMovies(path, page);
     const newData = await this.#changeImageLinkInObject(data);
     return newData;
   }
@@ -143,6 +143,17 @@ export default class Movies {
       .catch((error) => error);
   }
 }
+//   async getMoviesRatePage() {
+//     try {
+//       const path = `/guest_session/${this.sessionId}/rated/movies`;
+//       // const data = await fetch(`${this._apiBase}${path}?api_key=${this.apiKey}&guest_session_id=${this.sessionId}`);
+//       const data = await fetch(`${this._apiBase}${path}?api_key=${this.apiKey}&page=2`);
+//       console.log(data.json());
+//     } catch (error) {
+//       return error;
+//     }
+//   }
+// }
 
 // const api = new Movies('809a67e0d0a61d8139c5fb080216f70d');
 // const api = new Movies('809a67e0d0a61d8139c5fb080216f70d');
