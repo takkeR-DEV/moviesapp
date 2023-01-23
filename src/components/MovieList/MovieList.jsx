@@ -206,7 +206,7 @@ export default class MovieList extends Component {
             onChange={this.onChangePagination}
           />
         );
-      } else if (active === 'rated') {
+      } else if (!!moviesRateData.length && active === 'rated') {
         pagination = (
           <Pagination
             className="pagination"
