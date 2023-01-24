@@ -106,6 +106,10 @@ export default class Movies {
   async getResourceRatedMovies(path, page = 1) {
     try {
       const data = await fetch(`${this._apiBase}${path}?api_key=${this.apiKey}&page=${page}`);
+      if (data.status === 401) {
+        localStorage.removeItem('guest_session_id');
+        await this.getSession();
+      }
       return data.json();
     } catch (error) {
       return error;
