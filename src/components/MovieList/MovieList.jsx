@@ -180,7 +180,6 @@ export default class MovieList extends Component {
     const { active } = this.props;
     if (active === 'search') this.changePaginationSearch(page);
     if (active === 'rated') {
-      console.log('rated');
       this.getRateFilms(page);
     }
   };

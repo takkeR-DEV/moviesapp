@@ -41,14 +41,14 @@ export default class Movies {
     const request = {
       url: `/movie/${id}`,
       query: '',
-      page: '',
+      page: 1,
     };
     return this.#getResource(request);
   }
 
   getSearchMovies(query, page = 1) {
     const request = {
-      url: '/search/movie/',
+      url: '/search/movie',
       query: `&query=${query}`,
       page: `&page=${page}`,
     };
@@ -147,24 +147,3 @@ export default class Movies {
       .catch((error) => error);
   }
 }
-//   async getMoviesRatePage() {
-//     try {
-//       const path = `/guest_session/${this.sessionId}/rated/movies`;
-//       // const data = await fetch(`${this._apiBase}${path}?api_key=${this.apiKey}&guest_session_id=${this.sessionId}`);
-//       const data = await fetch(`${this._apiBase}${path}?api_key=${this.apiKey}&page=2`);
-//       console.log(data.json());
-//     } catch (error) {
-//       return error;
-//     }
-//   }
-// }
-
-// const api = new Movies('809a67e0d0a61d8139c5fb080216f70d');
-// const api = new Movies('809a67e0d0a61d8139c5fb080216f70d');
-// const imagePath = `/cibC5b4D99Vosf41wop3jVeyL2f.jpg`;
-// (async () => {
-// console.log(`1 Фильмы по запросу`, await api.getSerchMovies('hh'));
-// console.log(`2 Фильм по id`, await api.getMovie(2));
-//   // console.log(`3 Жанры фильмов`, await api.getGenres());
-//   // console.log(`4 Получение картинки`, await api.getImage(imagePath));
-// })();
